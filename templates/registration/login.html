@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+  Log-in
+{% endblock %}
+{% block content %}
+  <h1>Iniciar sesión</h1>
+  {% if form.errors %}
+    <p>Su nombre de usuario y contraseña no coinciden. Inténtelo nuevamente</p>
+  {% else %}
+    <p>Por favor, utilice el siguiente formulario para iniciar sesión.
+      Si no tienes una cuenta <a href="{% url 'register' %}">Regístrate aquí</a>
+    </p>
+    
+  {% endif %}
+  <div class="login-form">
+    <form action="{% url 'login' %}" method="post">
+      {{ form.as_p }}
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+      <p>
+        <input type="submit" value="Log-in" />
+      </p>
+    </form>
+    <p>
+      <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+    </p>
+  </div>
+{% endblock %}
