@@ -26,12 +26,12 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'alucase.dev']
 
 
 # Application definition
 
-#Aquí las aplicaciones por defecto
+# Aquí las aplicaciones por defecto
 BASE_APP = [
     'account.apps.AccountConfig',
     'django.contrib.admin',
@@ -41,14 +41,18 @@ BASE_APP = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-#Aquí las aplicaciones de terceros
+# Aquí las aplicaciones de terceros
 THIRD_APP = [
-    #Configuración para
-
+    # Configuración para Python Social Auth
+    'social_django',
+    # Running the development server through HTTPS
+    'django_extensions',
+    # Creación de miniaturas de imágenes mediante easy-thumbnails
+    'easy_thumbnails',
 ]
-#Aquí las aplicaciones propias (Ordenar alfabéticamente)
+# Aquí las aplicaciones propias (Ordenar alfabéticamente)
 OWN_APP = [
-
+    'images.apps.ImagesConfig',
 ]
 INSTALLED_APPS = BASE_APP + THIRD_APP + OWN_APP
 
@@ -89,10 +93,11 @@ WSGI_APPLICATION = 'bookmarks.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bookmarks', #Reemplazar por el nombre de la base de datos del archivo docker-compose.yml
+        'NAME': 'bookmarks',  # Reemplazar por el nombre de la base de datos del archivo docker-compose.yml
         'USER': config('USER_DB'),
         'PASSWORD': config('PASSWORD_DB'),
-        'HOST': 'postgres_container',
+        # 'HOST': 'postgres_container',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -141,7 +146,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static', ]
+    BASE_DIR / 'static',
+]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'

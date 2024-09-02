@@ -4,7 +4,13 @@
 {% endblock %}
 {% block content %}
   <h1>Dashboard</h1>
+  {% with total_images_created=request.user.images_created.count %}
+    <p>Bienvenido al dashboard. Has marcado como favorita {{ total_images_created }} imagen{{ total_images_created|pluralize }}.</p>
+  {% endwith %}
   <p>
-    Bienvenido al dashboard. Puedes <a href="{% url 'edit' %}">editar tu perfil</a> o <a href="{% url 'password_change' %}">cambiar tu contraseña</a>.
+    Arrastra el siguiente botón a tu barra de marcadores para marcar imágenes de otros sitios web → <a href="javascript:{% include 'bookmarklet_launcher.js' %}" class="button">Bookmark it</a>
+  </p>
+  <p>
+    También puedes <a href="{% url 'edit' %}">editar tu perfil</a> o <a href="{% url 'password_change' %}">cambiar tu contraseña</a>.
   </p>
 {% endblock %}
