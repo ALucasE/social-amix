@@ -13,4 +13,11 @@
   <p>
     También puedes <a href="{% url 'edit' %}">editar tu perfil</a> o <a href="{% url 'password_change' %}">cambiar tu contraseña</a>.
   </p>
+  <p><a href="{% url 'images:ranking' %}">Ranking de imagenes mas vistas</a></p>
+  <h2>Lo que está sucediendo</h2>
+  <div id="action-list">
+    {% for action in actions %}
+      {% include "actions/action/detail.html" %}
+    {% endfor %}
+  </div>
 {% endblock %}

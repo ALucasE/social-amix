@@ -29,6 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'alucase.dev']
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+ ]
+
 
 # Application definition
 
@@ -50,14 +54,19 @@ THIRD_APP = [
     'django_extensions',
     # Creación de miniaturas de imágenes mediante easy-thumbnails
     'easy_thumbnails',
+    # Django Debug Toolbar
+    'debug_toolbar',
+    
 ]
 # Aquí las aplicaciones propias (Ordenar alfabéticamente)
 OWN_APP = [
     'images.apps.ImagesConfig',
+    'actions.apps.ActionsConfig',
 ]
 INSTALLED_APPS = BASE_APP + THIRD_APP + OWN_APP
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -172,3 +181,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ABSOLUTE_URL_OVERRIDES = {'auth.user': lambda u: reverse_lazy('user_detail', args=[u.username])}
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0

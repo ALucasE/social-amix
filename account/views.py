@@ -9,6 +9,8 @@ from django.contrib import messages
 
 from .forms import LoginForm, UserRegistrationForm, ProfileEditForm, UserEditForm
 from .models import Profile, Contact
+from actions.utils import create_action
+from actions.models import Action
 
 
 def user_login(request):
@@ -38,6 +40,7 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
+            create_action(new_user, 'ha creado una cuenta')
             return render(request, 'account/register_done.html', {'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
@@ -46,7 +49,14 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+    actions = Action.objects.exclude(user=request.user)
+    following_ids = request.user.following.values_list('id', flat=True)
+    if following_ids:
+        # If user is following others, retrieve only their actions
+        actions = actions.filter(user_id__in=following_ids)
+    actions = actions.select_related('user', 'user__profile').prefetch_related('target')[:10]
+    context = {'section': 'dashboard', 'actions': actions}
+    return render(request, 'account/dashboard.html', context)
 
 
 @login_required
@@ -91,7 +101,7 @@ def user_follow(request):
             user = User.objects.get(id=user_id)
             if action == 'follow':
                 Contact.objects.get_or_create(user_from=request.user, user_to=user)
-                # create_action(request.user, 'is following', user)
+                create_action(request.user, 'está siguiendo', user)
             else:
                 Contact.objects.filter(user_from=request.user, user_to=user).delete()
             return JsonResponse({'status': 'ok'})
